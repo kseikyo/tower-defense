@@ -1,7 +1,11 @@
 {
   "images": {
     "background": "",
-    "cursor": "https://i.imgur.com/aW2T2qq.png"
+    "cursor": "https://i.imgur.com/aW2T2qq.png",
+    "enemy1": "https://i.imgur.com/eM2W3CU.png?1",
+    "enemy2": "https://i.imgur.com/qAYYPwR.png?1",
+    "enemy3": "https://i.imgur.com/JveHGEO.png?1",
+    "enemy_sprite": "https://i.imgur.com/RCJsQLd.png"
   },
   "@@editor": [
     {
@@ -17,9 +21,33 @@
           "type": "image"
         },
         {
+          "key": "enemy1",
+          "name": "Enemy 1",
+          "description": "Enemy 1 image",
+          "type": "image"
+        },
+        {
+          "key": "enemy2",
+          "name": "Enemy 2",
+          "description": "Enemy 2 image",
+          "type": "image"
+        },
+        {
+          "key": "enemy3",
+          "name": "Enemy 3",
+          "description": "Enemy 3 image",
+          "type": "image"
+        },
+        {
           "key": "cursor",
           "name": "Example",
           "description": "My example image",
+          "type": "image"
+        },
+        {
+          "key": "enemy_sprite",
+          "name": "Enemy Sprite",
+          "description": "Enemy Sprite",
           "type": "image"
         }
       ]
