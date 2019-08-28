@@ -23,32 +23,32 @@
         },
         {
           "key": "enemy1",
-          "name": "Enemy 1",
-          "description": "Enemy 1 image",
+          "name": "Enemy part 1",
+          "description": "This is the part 1 image of one enemy.",
           "type": "image"
         },
         {
           "key": "enemy2",
-          "name": "Enemy 2",
-          "description": "Enemy 2 image",
+          "name": "Enemy part 2",
+          "description": "This is the part 2 image of one enemy.",
           "type": "image"
         },
         {
           "key": "enemy3",
-          "name": "Enemy 3",
-          "description": "Enemy 3 image",
+          "name": "Enemy part 3",
+          "description": "This is the part 3 image of one enemy.",
           "type": "image"
         },
         {
           "key": "cursor",
-          "name": "Example",
-          "description": "My example image",
+          "name": "Cursor image",
+          "description": "The image to be used as the cursor",
           "type": "image"
         },
         {
           "key": "enemy_sprite",
           "name": "Enemy Sprite",
-          "description": "Enemy Sprite",
+          "description": "The first enemy sprite. [Does not work yet]",
           "type": "image"
         }
       ]
