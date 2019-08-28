@@ -3,6 +3,7 @@ let imgCursor;
 
 let towers = [];
 let enemyes = [];
+let spritedata;
 let imgEnemy1;
 let imgEnemy2;
 let imgEnemy3;
@@ -24,20 +25,26 @@ function preload() {
         imgBackground = loadImage(Koji.config.images.background);
     }
 
-    if (Koji.config.images.enemy1 != "") {
-        imgEnemy1 = loadImage(Koji.config.images.enemy1);
-        enemyes.push(imgEnemy1);
-    }
+    // if(Koji.config.images.enemy_sprite != "") {
+    //     imgEnemy1 = loadImage(Koji.config.images.enemy_sprite);
+    // }
+    // else {
+        if (Koji.config.images.enemy1 != "") {
+            imgEnemy1 = loadImage(Koji.config.images.enemy1);
+            enemyes.push(imgEnemy1);
+        }
 
-    if (Koji.config.images.enemy2 != "") {
-        imgEnemy2 = loadImage(Koji.config.images.enemy2);
-        enemyes.push(imgEnemy2);
-    }
+        if (Koji.config.images.enemy2 != "") {
+            imgEnemy2 = loadImage(Koji.config.images.enemy2);
+            enemyes.push(imgEnemy2);
+        }
 
-    if (Koji.config.images.enemy3 != "") {
-        imgEnemy3 = loadImage(Koji.config.images.enemy3);
-        enemyes.push(imgEnemy3);
-    }    
+        if (Koji.config.images.enemy3 != "") {
+            imgEnemy3 = loadImage(Koji.config.images.enemy3);
+            enemyes.push(imgEnemy3);
+        }
+    //}
+    
     imgCursor = loadImage(Koji.config.images.cursor);
     //===Load Sounds here
     //Include a simple IF check to make sure there is a sound in config, also include a check when you try to play the sound, so in case there isn't one, it will just be ignored instead of crashing the game
@@ -51,6 +58,8 @@ function setup() {
     //Set our canvas size to full window size
     width = window.innerWidth;
     height = window.innerHeight;
+
+    noCursor();
 
     createCanvas(width, height);
 
