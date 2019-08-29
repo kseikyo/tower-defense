@@ -1,7 +1,10 @@
 let imgBackground;
 let imgCursor;
-let extraCanvas;
+// let extraCanvas;
 let cursor;
+let imgTile_1;
+let imgTile_2;
+
 // GAME OBJECTS
 let towers = [];
 let enemyes = [];
@@ -27,22 +30,16 @@ let rows = 10;
 
 // OTHER CONFIGURATIONS
 let sndTap;
-
+let tale = 9;
 let score;
 
 //===This function is called before starting the game
 //Load everything here
 function preload() {
 
-    
-
     if (Koji.config.images.background != "") {
         imgBackground = loadImage(Koji.config.images.background);
     }
-
-    //*** Trying to load a whole sprite and make the animation
-    //*** I don't know why, but I cannot read the the images width by, e.g, spritedata.width
-    //*** It returns undefined. But when using spritedata on the web console, it works there.
 
     if(Koji.config.images.enemy_sprite != "") {
        spritedata = loadImage(Koji.config.images.enemy_sprite);
@@ -64,8 +61,16 @@ function preload() {
         }
     }
     
-    console.log(towers);
+    enemyes.push(new Enemy(health = 5, img = loadImage(Koji.config.images.enemy1), position= {x: 0, y: 0}));
+    console.log(enemyes);
     imgCursor = loadImage(Koji.config.images.cursor);
+
+    if (Koji.config.images.ground_1 != "") {
+        imgTile_1 = loadImage(Koji.config.images.ground_1);
+    }
+    if (Koji.config.images.ground_2 != "") {
+        imgTile_2 = loadImage(Koji.config.images.ground_2);
+    }
     //===Load Sounds here
     //Include a simple IF check to make sure there is a sound in config, also include a check when you try to play the sound, so in case there isn't one, it will just be ignored instead of crashing the game
     if (Koji.config.sounds.tap) sndTap = loadSound(Koji.config.sounds.tap);
@@ -79,11 +84,10 @@ function setup() {
     width = window.innerWidth;
     height = window.innerHeight;
     
-    noCursor();
 
     //SETTING UP THE PATH ARRAY
     
-
+    noCursor();
     createCanvas(width, height);
 
     score = 0;
@@ -99,30 +103,36 @@ function draw() {
         background(Koji.config.colors.backgroundColor);
     }
     
-    // for (let i = 0; i < cols; i++) {
-    //     for (let j = 0; j < rows; j++) {
-    //         let x = i* width/cols;
-    //         let y = j* height/rows;
-    //         enemy_path.push([i,j]);
-    //         stroke(0);
-    //         fill(255);
-    //         rect(x, y, width/cols, height/rows);
-    //     }
-    //     //console.log(enemy_path[i]);
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            let x = i* width/cols;
+            let y = j* height/rows;
+            
+            if (i % 2 === 0) {
+                image(imgTile_1, x, y, width/cols, height/rows);
+            }else if((i === 1 && j === 9) || (i === 3 && j === 0) || (i === 5 && j === 9)  || (i === 7 && j === 0) ){
+                image(imgTile_1, x, y, width/cols, height/rows);
+            }else
+                image(imgTile_2, x, y, width/cols, height/rows);
+        }
         
-    // }
-    // 
+        //console.log(enemy_path[i]);
+        
+    }
+    
 
 
     for (let i = 9; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             let x = i* width/cols;
             let y = j* height/rows;
-            stroke(0);
-            fill(255);
+            
             rect(x, y, width/cols, height/rows);
+            
+            
         }
     }
+    
 
     
     for(let i = 0 ; i < len; i++) {
@@ -137,10 +147,10 @@ function draw() {
     
 
     image(imgCursor, mouseX, mouseY);
-    fill(Koji.config.colors.titleColor);
-    textAlign(CENTER, TOP);
-    textSize(15);
-    text(Koji.config.strings.title, width / 2, 20);
+    for(let k = 0; k < enemyes.length; k++) {
+        enemyes[k].show();
+        enemyes[k].move_to_objective(width, height);
+    }
 
     
 }
@@ -155,8 +165,8 @@ function touchStarted() {
 }
 
 function mousePressed() {
-    if(dist(mouseX, mouseY, width-40, -10) < height/10) {
-        towers.push(new Tower(damange = 0, position={x: width-40, y: -10}, img=spritedata));
+    if(dist(mouseX, mouseY, width-40, (height/10)/2) < height/10) {
+        towers.push(new Tower(damange = 0, position={x: width-40, y: (height/10)/2}, img=spritedata));
         len = towers.length;
     }
     console.log(towers);

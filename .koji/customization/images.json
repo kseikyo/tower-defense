@@ -6,7 +6,9 @@
     "enemy1": "https://i.imgur.com/eM2W3CU.png?1",
     "enemy2": "https://i.imgur.com/qAYYPwR.png?1",
     "enemy3": "https://i.imgur.com/JveHGEO.png?1",
-    "enemy_sprite": "https://i.imgur.com/RCJsQLd.png"
+    "enemy_sprite": "https://i.imgur.com/RCJsQLd.png",
+    "ground_1": "https://i.imgur.com/x9DmPzY.png",
+    "ground_2": "https://i.imgur.com/LZkdvqm.png"
   },
   "@@editor": [
     {
@@ -42,13 +44,25 @@
         {
           "key": "cursor",
           "name": "Cursor image",
-          "description": "The image to be used as the cursor",
+          "description": "The image to be used as the cursor.",
           "type": "image"
         },
         {
           "key": "enemy_sprite",
           "name": "Enemy Sprite",
-          "description": "The first enemy sprite. [Does not work yet]",
+          "description": "The first enemy sprite.",
+          "type": "image"
+        },
+        {
+          "key": "ground_1",
+          "name": "Ground tile 1",
+          "description": "This is the main tile to be used on the background.",
+          "type": "image"
+        },
+        {
+          "key": "ground_2",
+          "name": "Ground tile 2",
+          "description": "Secondary tile that's used on the background.",
           "type": "image"
         }
       ]

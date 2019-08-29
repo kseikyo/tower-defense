@@ -1,21 +1,18 @@
 
 class Enemy {
-    constructor(health = 5, image = null, position = {x: null, y: null}) {
+    constructor(health = 5, img = null, position = {x: 0, y: 0}) {
         this.path = [];
         this.health = health;
-        this.image = image;
+        this.img = img;
         this.position = position;
     }
 
-    move_to_objective(path) {
-        for(let i = 0; i < path.length; i++) {
-                this.position.x = path[i][0];
-                this.position.y = path[i][1];
-        }
+    move_to_objective(width, height) {
+        
     }
 
     show() {
-        image(this.image, this.position.x, this.position.y);
+        image(this.img, this.position.x, this.position.y, 60, 40);
     }
 
 }
