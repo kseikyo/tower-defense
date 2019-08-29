@@ -6,7 +6,8 @@ let cursor;
 let towers = [];
 let enemyes = [];
 
-let enemy_path = [[]];
+let enemy_path_x = [-100, 100, 200, 250, 250, 470, 600, 800, 870];
+let enemy_path_y = [-100, 100, 250, 300, 500, 650, 730, 850, 900];
 
 let tower;
 
@@ -17,12 +18,12 @@ let imgEnemy2;
 let imgEnemy3;
 
 // GAME OBJECTS CONFIGURATIONS
-let x = 50;
-let y = 0;
-let speedX = 1;
-let speedY = 1;
-let cols = 20;
-let rows = 20;
+let len = 0;
+let x = -100;
+let y = -100;
+let offsetX, offsetY;
+let cols = 10;
+let rows = 10;
 
 // OTHER CONFIGURATIONS
 let sndTap;
@@ -43,11 +44,10 @@ function preload() {
     //*** I don't know why, but I cannot read the the images width by, e.g, spritedata.width
     //*** It returns undefined. But when using spritedata on the web console, it works there.
 
-    //if(Koji.config.images.enemy_sprite != "") {
-    //    spritedata = loadImage(Koji.config.images.enemy_sprite);
-    //    console.log(spritedata);
-    //}
-    //else {
+    if(Koji.config.images.enemy_sprite != "") {
+       spritedata = loadImage(Koji.config.images.enemy_sprite);
+    }
+    else {
         if (Koji.config.images.enemy1 != "") {
             imgEnemy1 = loadImage(Koji.config.images.enemy1);
             enemyes.push(imgEnemy1);
@@ -62,9 +62,9 @@ function preload() {
             imgEnemy3 = loadImage(Koji.config.images.enemy3);
             enemyes.push(imgEnemy3);
         }
-    //}
-    tower = new Tower(damange = 0, position={x: 100, y: 100}, img=imgEnemy1);
+    }
     
+    console.log(towers);
     imgCursor = loadImage(Koji.config.images.cursor);
     //===Load Sounds here
     //Include a simple IF check to make sure there is a sound in config, also include a check when you try to play the sound, so in case there isn't one, it will just be ignored instead of crashing the game
@@ -78,11 +78,11 @@ function setup() {
     //Set our canvas size to full window size
     width = window.innerWidth;
     height = window.innerHeight;
-
+    
     noCursor();
 
-    extraCanvas = createGraphics(width, height);
-    extraCanvas.clear();
+    //SETTING UP THE PATH ARRAY
+    
 
     createCanvas(width, height);
 
@@ -99,53 +99,44 @@ function draw() {
         background(Koji.config.colors.backgroundColor);
     }
     
-        
-    image(imgCursor, mouseX, mouseY, 50, 50);
-        
-
     // for (let i = 0; i < cols; i++) {
     //     for (let j = 0; j < rows; j++) {
     //         let x = i* width/cols;
     //         let y = j* height/rows;
+    //         enemy_path.push([i,j]);
     //         stroke(0);
     //         fill(255);
     //         rect(x, y, width/cols, height/rows);
     //     }
+    //     //console.log(enemy_path[i]);
+        
     // }
-    // for (let i = 0; i < 3; i++) {
-    //   image(enemyes[i], x, y, 64, 64);
-    //   if( x < 0) {
-    //     speedX *= -1;
-    //     if (sndTap) sndTap.play();
-    //   }
-    //   if( x > width-48) {
-    //     speedX *= -1;
-    //     if (sndTap) sndTap.play();
-    //   }
-    //   if ( y < 0){
-    //     speedY *= -1;
-    //     if (sndTap) sndTap.play();
-    //   }
-    //   if ( y > height-48) {
-    //     speedY *= -1;
-    //     if (sndTap) sndTap.play();
-    //   }
-    //   x += speedX;
-    //   y += speedY ;
-    // }
+    // 
 
 
-    // for (let i = 0; i < cols; i++) {
-    //     for (let j = 0; j < rows; j++) {
-    //         let x = i* width/cols;
-    //         let y = j* height/rows;
-    //         stroke(0);
-    //         fill(255);
-    //         rect(x, y, width/cols, height/rows);
-    //     }
-    // }
+    for (let i = 9; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            let x = i* width/cols;
+            let y = j* height/rows;
+            stroke(0);
+            fill(255);
+            rect(x, y, width/cols, height/rows);
+        }
+    }
 
     
+    for(let i = 0 ; i < len; i++) {
+        if(towers[i].isDragging && !towers[i].isPlaced) {
+            offsetX = mouseX;
+            offsetY = mouseY;
+            towers[i].show(offsetX, offsetY);
+        }else{
+            towers[i].show(towers[i].position.x, towers[i].position.y);
+        }
+    }
+    
+
+    image(imgCursor, mouseX, mouseY);
     fill(Koji.config.colors.titleColor);
     textAlign(CENTER, TOP);
     textSize(15);
@@ -160,16 +151,44 @@ function touchStarted() {
 
     //Play sound
     if (sndTap) sndTap.play();
+    
 }
 
 function mousePressed() {
-    tower.touchMoved();
-    clear();
+    if(dist(mouseX, mouseY, width-40, -10) < height/10) {
+        towers.push(new Tower(damange = 0, position={x: width-40, y: -10}, img=spritedata));
+        len = towers.length;
+    }
+    console.log(towers);
+    len = towers.length;
+    for(let i = 0; i < len; i++) {
+        if(!towers[i].isPlaced) {
+            if(dist(towers[i].position.x, towers[i].position.y, mouseX, mouseY) < height/10){
+                //console.log(`${true} posX ${towers[i].position.x} posY ${towers[i].position.y} mX = ${mouseX} mY = ${mouseY}`)
+                towers[i].isDragging = true;
+                offsetX = mouseX;
+                offsetY = mouseY;
+            }
+            
+        }
+    }
+    
+}
+
+function mouseReleased() {
+    len = towers.length;
+    for(let i = 0; i < len; i++) {
+
+        if(towers[i].isPlaced || !towers[i].isDragging)
+            continue;
+        
+        towers[i].isPlaced = true;
+        towers[i].isDragging = false;
+    }
 }
 
 function touchMoved() {
-    tower.touchMoved();
-    clear();
+    
 }
 
 function touchEnded() {
@@ -208,6 +227,13 @@ function keyPressed() {
 
     if (key == 'p') {
         console.log("Pressed: p")
+        var encodedUri = encodeURI(enemy_path);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "my_data.txt");
+        document.body.appendChild(link); // Required for FF
+
+        link.click();
     }
 
 }
