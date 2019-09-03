@@ -1,6 +1,5 @@
 let imgBackground;
 let imgCursor;
-// let extraCanvas;
 let cursor;
 let imgTile_1;
 let imgTile_2;
@@ -8,12 +7,6 @@ let imgTile_2;
 // GAME OBJECTS
 let towers = [];
 let enemies = [];
-
-let enemy_path_x = [-100, 100, 200, 250, 250, 470, 600, 800, 870];
-let enemy_path_y = [-100, 100, 250, 300, 500, 650, 730, 850, 900];
-let path = [];
-let dif_path = [];
-let tower;
 
 let spritedata;
 
@@ -24,7 +17,11 @@ let imgEnemy3;
 // GAME OBJECTS CONFIGURATIONS
 let shift_path = false;
 let launch_wave = true;
-let len = 0;
+// let len = 0;
+let rangeY = [];
+let rangeX = [];
+let speedX = 5;
+let speedY = 5;
 let cols = 10;
 let rows = 10;
 
@@ -37,12 +34,13 @@ let score;
 //Load everything here
 function preload() {
 
-    if (Koji.config.images.background != "") {
-        imgBackground = loadImage(Koji.config.images.background);
-    }
+    // if (Koji.config.images.background != "") {
+    //     imgBackground = loadImage(Koji.config.images.background);
+    // }
 
     if(Koji.config.images.enemy_sprite != "") {
        spritedata = loadImage(Koji.config.images.enemy_sprite);
+       
     }
     else {
         if (Koji.config.images.enemy1 != "") {
@@ -60,13 +58,10 @@ function preload() {
             enemies.push(imgEnemy3);
         }
     }
-
-    imgEnemy1 = loadImage(Koji.config.images.enemy1);
     
-    enemies.push(new Enemy(health = 5, img = spritedata, position= {x: -8000, y: 0}));
-    
-    imgCursor = loadImage(Koji.config.images.cursor);
-
+    if(Koji.config.images.cursor != "") {
+        imgCursor = loadImage(Koji.config.images.cursor);
+    }
     if (Koji.config.images.ground_1 != "") {
         imgTile_1 = loadImage(Koji.config.images.ground_1);
     }
@@ -75,7 +70,7 @@ function preload() {
     }
     //===Load Sounds here
     //Include a simple IF check to make sure there is a sound in config, also include a check when you try to play the sound, so in case there isn't one, it will just be ignored instead of crashing the game
-    if (Koji.config.sounds.tap) sndTap = loadSound(Koji.config.sounds.tap);
+    //if (Koji.config.sounds.tap) sndTap = loadSound(Koji.config.sounds.tap);
 
 }
 
@@ -86,26 +81,9 @@ function setup() {
     width = window.innerWidth;
     height = window.innerHeight;
     
-    for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-            let x = i* width/cols;
-            let y = j* height/rows;
-            
-            if (i % 2 === 0) {
-                path.push([Math.trunc(x),Math.trunc(y)]);
-            }else if((i === 1 && j === 9) || (i === 3 && j === 0) || (i === 5 && j === 9)  || (i === 7 && j === 0) ){
-                path.push([Math.trunc(x), Math.trunc(y)]);
-            }
-        }
-    }
-
-    
-    for(let i = path.length-1; i >=0; i--) {
-        if(i === 0) break;
-        dif_path.push([path[i][0] - path[i-1][0],path[i][1] - path[i-1][1]]);
-    }
     noCursor();
     createCanvas(width, height);
+    extraCanvas = createGraphics(width, height);
 
     score = 0;
 }
@@ -113,42 +91,34 @@ function setup() {
 function draw() {
 
     //Draw background if there is one or a solid color
-    if (imgBackground) {
-        background(imgBackground);
-    } else {
-        background(Koji.config.colors.backgroundColor);
-    }
+    // if (imgBackground) {
+    //     background(imgBackground);
+    // } else {
+    //     background(Koji.config.colors.backgroundColor);
+    // }
     
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             let x = i* width/cols;
             let y = j* height/rows;
-            
-            if (i % 2 === 0) {
-                image(imgTile_1, x, y, width/cols, height/rows);
-            }else if((i === 1 && j === 9) || (i === 3 && j === 0) || (i === 5 && j === 9)  || (i === 7 && j === 0) ){
-                image(imgTile_1, x, y, width/cols, height/rows);
-            }else
-                image(imgTile_2, x, y, width/cols, height/rows);
+            if( i === 9 ) {
+                rect(x, y, width/cols, height/rows);
+                
+            }
+            else {
+                if (i % 2 === 0) {
+                    image(imgTile_1, x, y, width/cols, height/rows);
+                }else if((i === 1 && j === 9) || (i === 3 && j === 0) || (i === 5 && j === 9)  || (i === 7 && j === 0) ){
+                    image(imgTile_1, x, y, width/cols, height/rows);
+                }else
+                    image(imgTile_2, x, y, width/cols, height/rows);
+            }
         }
+        
         
     }
 
-    
-    
 
-
-    // Drawing the rectangles from top to bottom right side
-    for (let i = 9; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-            let x = i* width/cols;
-            let y = j* height/rows;
-            
-            rect(x, y, width/cols, height/rows);
-            
-            
-        }
-    }
     
 
     //  Drawing tower being dragged
@@ -164,22 +134,74 @@ function draw() {
     
 
     image(imgCursor, mouseX, mouseY);
-
+    
     if(launch_wave) {
-        for(let i = 0; i < 5; i++) {
-            image(enemies[0].img, enemies[0].position.x, enemies[0].position.y)
-            enemies[0].move_to_objective(shift_path);
+        for(let i = 0; i < enemies.length; i++) {
+            //console.log(`1 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
+            if(enemies[i].walkedY === (Math.round(height / 5) * 5)+120 && enemies[i].isDown && !enemies[i].isRight) {
+                enemies[i].actions += 1;
+                enemies[i].isRight = true;
+                enemies[i].isDown = !enemies[i].isDown;
+            }
+            else if(enemies[i].walkedX === (Math.round((width/5) / 5)* 5) && enemies[i].isRight && !enemies[i].isDown) {
+                enemies[i].actions += 1;
+                if(enemies[i].actions === 5 || enemies[i].actions === 9) {
+                    enemies[i].walkedX = 0;
+                    enemies[i].isRight = false;
+                    enemies[i].isDown = true;
+                }else {
+                    enemies[i].walkedX = 0;
+                    enemies[i].isRight = false;
+                    enemies[i].isDown = false;
+                }
+                //console.log(`2 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
+            }else if(enemies[i].walkedY === 160 && !enemies[i].isDown && !enemies[i].isRight){
+                enemies[i].actions += 1;
+                enemies[i].isRight = true;
+                enemies[i].isDown = false;
+                //console.log(`3 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
+            }
+            
+            if(enemies[i].isDown) {
+                enemies[i].show();
+                enemies[i].position.y += speedY;
+                enemies[i].walkedY += speedY;
+            }
+            else if(enemies[i].isRight){
+                enemies[i].show();
+                enemies[i].position.x += speedX;
+                enemies[i].walkedX += speedX;
+            }
+            else if(!enemies[i].isDown && !enemies.isRight) {
+                enemies[i].show();
+                enemies[i].position.y -= speedY;
+                enemies[i].walkedY -= speedY;
+            }
+            if(enemies[i].actions === 10) {
+                enemies.splice(i,1);
+                launch_wave = false;
+            }
             shift_path = !shift_path;
         }
-        launch_wave = false;
     }
+    if(!launch_wave) {
+        fill(255);
+        textSize(100);
+        text('Press a mouse button to start!')
+    }
+    
 
 }
 
 
 //===Handle mouse/tap input here
 function touchStarted() {
-    enemies[0].launch();
+    for(let i = 0; i < 5; i++) {
+        enemies[i] = new Enemy({img : spritedata, position : {x: -10, y: -200 }});
+    }
+    for(let i = 0; i < enemies.length; i++) {
+        enemies[i].launch();
+    }
     launch_wave = true;
     //Play sound
     //if (sndTap) sndTap.play();
