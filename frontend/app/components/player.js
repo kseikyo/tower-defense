@@ -1,5 +1,6 @@
 class Player {
-    constructor() {
-        
+    constructor({lifes = 5} = {}) {
+        this.lifes = lifes;
     }
+
 }
