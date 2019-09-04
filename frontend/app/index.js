@@ -17,13 +17,22 @@ let imgEnemy3;
 // GAME OBJECTS CONFIGURATIONS
 let shift_path = false;
 let launch_wave = false;
-// let len = 0;
-let rangeY = [];
-let rangeX = [];
+
+let gameOver = true;
+
 let speedX = 5;
 let speedY = 5;
+
 let cols = 10;
 let rows = 10;
+
+//Sizing
+let objSize; //base size modifier of all objects, calculated based on screen size
+
+//game size in tiles, using bigger numbers will decrease individual object sizes but allow more objects to fit the screen
+//Keep in mind that if you change this, you might need to change text sizes as well
+let gameSize = 18;
+let gameWidth;
 
 // OTHER CONFIGURATIONS
 let sndTap;
@@ -71,7 +80,7 @@ function preload() {
     //===Load Sounds here
     //Include a simple IF check to make sure there is a sound in config, also include a check when you try to play the sound, so in case there isn't one, it will just be ignored instead of crashing the game
     //if (Koji.config.sounds.tap) sndTap = loadSound(Koji.config.sounds.tap);
-
+    towers[0] = new Tower();
 }
 
 
@@ -82,115 +91,157 @@ function setup() {
     height = window.innerHeight;
     
     noCursor();
-    createCanvas(width, height);
-    extraCanvas = createGraphics(width, height);
+    let sizeModifier = 0.65;
+    if (height > width) {
+        sizeModifier = 1;
+    }
 
+    //Get the lower one, used for centering the game
+    gameWidth = min(width, height);
+
+    createCanvas(width, height);
+
+    //Magically determine basic object size depending on size of the screen
+    objSize = floor(min(floor(width / gameSize), floor(height / gameSize)) * sizeModifier);
+
+   
     score = 0;
 }
 
-function draw() {
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
 
+    width = window.innerWidth;
+    height = window.innerHeight;
+
+    //===How much of the screen should the game take, this should usually be left as it is
+    let sizeModifier = 0.65;
+    if (height > width) {
+        sizeModifier = 1;
+    }
+
+    //Get the lower one, used for centering the game
+    gameWidth = min(width, height);
+
+    
+
+    //Magically determine basic object size depending on size of the screen
+    objSize = floor(min(floor(width / gameSize), floor(height / gameSize)) * sizeModifier);
+
+    stars = [];
+
+    spawnStarStart();
+}
+
+
+function draw() {
+    
     //Draw background if there is one or a solid color
     // if (imgBackground) {
     //     background(imgBackground);
     // } else {
     //     background(Koji.config.colors.backgroundColor);
     // }
-    
-    for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-            let x = i* width/cols;
-            let y = j* height/rows;
-            if( i === 9 ) {
-                rect(x, y, width/cols, height/rows);
-                
-            }
-            else {
-                if (i % 2 === 0) {
-                    image(imgTile_1, x, y, width/cols, height/rows);
-                }else if((i === 1 && j === 9) || (i === 3 && j === 0) || (i === 5 && j === 9)  || (i === 7 && j === 0) ){
-                    image(imgTile_1, x, y, width/cols, height/rows);
-                }else
-                    image(imgTile_2, x, y, width/cols, height/rows);
-            }
-        }
-        
-        
-    }
-
-
-    
-
-    //  Drawing tower being dragged
-    // for(let i = 0 ; i < len; i++) {
-    //     if(towers[i].isDragging && !towers[i].isPlaced) {
-    //         offsetX = mouseX;
-    //         offsetY = mouseY;
-    //         towers[i].show(offsetX, offsetY);
-    //     }else{
-    //         towers[i].show(towers[i].position.x, towers[i].position.y);
-    //     }
-    // }
-    
-
-    image(imgCursor, mouseX, mouseY);
-    
-    if(launch_wave) {
-        for(let i = 0; i < enemies.length; i++) {
-            //console.log(`1 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
-            if(enemies[i].walkedY === (Math.round(height / 5) * 5)+90 && enemies[i].isDown && !enemies[i].isRight) {
-                enemies[i].actions += 1;
-                enemies[i].isRight = true;
-                enemies[i].isDown = !enemies[i].isDown;
-            }
-            else if(enemies[i].walkedX === (Math.round((width/5) / 5)* 5) && enemies[i].isRight && !enemies[i].isDown) {
-                enemies[i].actions += 1;
-                if(enemies[i].actions === 5 || enemies[i].actions === 9) {
-                    enemies[i].walkedX = 0;
-                    enemies[i].isRight = false;
-                    enemies[i].isDown = true;
-                }else {
-                    enemies[i].walkedX = 0;
-                    enemies[i].isRight = false;
-                    enemies[i].isDown = false;
+    if(gameOver) {
+        background(Koji.config.colors.backgroundColor);
+        image(imgCursor, mouseX, mouseY);
+        showInstructions();
+    }else {
+        for (let i = 0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
+                let x = i* width/cols;
+                let y = j* height/rows;
+                if( i === 9 ) {
+                    fill(255);
+                    rect(x, y, width/cols, height/rows);
+                    towers[0].show(x+20, y+25, width/cols, height/rows);
                 }
-                //console.log(`2 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
-            }else if(enemies[i].walkedY === 150 && !enemies[i].isDown && !enemies[i].isRight){
-                enemies[i].actions += 1;
-                enemies[i].isRight = true;
-                enemies[i].isDown = false;
-                //console.log(`3 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
+                else {
+                    if (i % 2 === 0) {
+                        image(imgTile_1, x, y, width/cols, height/rows);
+                    }else if((i === 1 && j === 9) || (i === 3 && j === 0) || (i === 5 && j === 9)  || (i === 7 && j === 0) ){
+                        image(imgTile_1, x, y, width/cols, height/rows);
+                    }else
+                        image(imgTile_2, x, y, width/cols, height/rows);
+                }
             }
             
-            if(enemies[i].isDown) {
-                enemies[i].show();
-                enemies[i].position.y += speedY;
-                enemies[i].walkedY += speedY;
+            
+        }
+
+
+        
+
+        //  Drawing tower being dragged
+        // for(let i = 0 ; i < len; i++) {
+        //     if(towers[i].isDragging && !towers[i].isPlaced) {
+        //         offsetX = mouseX;
+        //         offsetY = mouseY;
+        //         towers[i].show(offsetX, offsetY);
+        //     }else{
+        //         towers[i].show(towers[i].position.x, towers[i].position.y);
+        //     }
+        // }
+        
+
+        image(imgCursor, mouseX, mouseY);
+        
+        if(launch_wave) {
+            for(let i = 0; i < enemies.length; i++) {
+                //console.log(`1 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
+                if(enemies[i].walkedY === (Math.round(height / 5) * 5)+90 && enemies[i].isDown && !enemies[i].isRight) {
+                    enemies[i].actions += 1;
+                    enemies[i].isRight = true;
+                    enemies[i].isDown = !enemies[i].isDown;
+                }
+                else if(enemies[i].walkedX === (Math.round((width/5) / 5)* 5) && enemies[i].isRight && !enemies[i].isDown) {
+                    enemies[i].actions += 1;
+                    if(enemies[i].actions === 5 || enemies[i].actions === 9) {
+                        enemies[i].walkedX = 0;
+                        enemies[i].isRight = false;
+                        enemies[i].isDown = true;
+                    }else {
+                        enemies[i].walkedX = 0;
+                        enemies[i].isRight = false;
+                        enemies[i].isDown = false;
+                    }
+                    //console.log(`2 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
+                }else if(enemies[i].walkedY === 150 && !enemies[i].isDown && !enemies[i].isRight){
+                    enemies[i].actions += 1;
+                    enemies[i].isRight = true;
+                    enemies[i].isDown = false;
+                    //console.log(`3 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
+                }
+                
+                if(enemies[i].isDown) {
+                    enemies[i].show();
+                    enemies[i].position.y += speedY;
+                    enemies[i].walkedY += speedY;
+                }
+                else if(enemies[i].isRight){
+                    enemies[i].show();
+                    enemies[i].position.x += speedX;
+                    enemies[i].walkedX += speedX;
+                }
+                else if(!enemies[i].isDown && !enemies.isRight) {
+                    enemies[i].show();
+                    enemies[i].position.y -= speedY;
+                    enemies[i].walkedY -= speedY;
+                }
+                if(enemies[i].actions === 10) {
+                    enemies.splice(i,1);
+                    launch_wave = false;
+                }
+                shift_path = !shift_path;
             }
-            else if(enemies[i].isRight){
-                enemies[i].show();
-                enemies[i].position.x += speedX;
-                enemies[i].walkedX += speedX;
-            }
-            else if(!enemies[i].isDown && !enemies.isRight) {
-                enemies[i].show();
-                enemies[i].position.y -= speedY;
-                enemies[i].walkedY -= speedY;
-            }
-            if(enemies[i].actions === 10) {
-                enemies.splice(i,1);
-                launch_wave = false;
-            }
-            shift_path = !shift_path;
+        }
+        if(!launch_wave){ 
+            fill(0);
+            textAlign(CENTER, TOP);
+            textSize(32);
+            text('Press a mouse button to launch a wave!', 0, 10, width);
         }
     }
-    if(!launch_wave){ 
-        fill(0);
-        textAlign(CENTER, TOP);
-        textSize(32);
-        text('Press a mouse button to launch a wave!', 0, 10, width);
-    }
-    
 
 }
 
@@ -207,6 +258,56 @@ function touchStarted() {
     //Play sound
     //if (sndTap) sndTap.play();
     
+}
+
+function showInstructions() {
+    let titleText = Koji.config.strings.title;
+    let titleSize = floor(objSize * 2);
+    textSize(titleSize);
+
+    //Resize title until it fits the screen
+    while (textWidth(titleText) > width * 0.7) {
+        titleSize *= 0.9;
+        textSize(titleSize);
+    }
+    fill(Koji.config.colors.titleColor);
+    textAlign(CENTER, TOP);
+    text(Koji.config.strings.title, width / 2, objSize * 1.5);
+
+    //===Draw instructions
+        let instructionsText = [];
+        instructionsText[0] = Koji.config.strings.instructions1;
+        instructionsText[1] = Koji.config.strings.instructions2;
+        instructionsText[2] = Koji.config.strings.instructions3;
+
+        let instructionsSize = [];
+
+        for (let i = 0; i < instructionsText.length; i++) {
+            instructionsSize[i] = floor(objSize * 0.75);
+            textSize(instructionsSize[i]);
+
+            //Resize text until it fits the screen
+            while (textWidth(instructionsText[i]) > width * 0.9) {
+                instructionsSize[i] *= 0.9;
+                textSize(instructionsSize[i]);
+            }
+        }
+
+        textSize(instructionsSize[0]);
+        fill(Koji.config.colors.instructionsColor);
+        textAlign(CENTER, TOP);
+        text(instructionsText[0], width / 2, objSize * 5);
+
+        textSize(instructionsSize[1]);
+        fill(Koji.config.colors.instructionsColor);
+        textAlign(CENTER, TOP);
+        text(instructionsText[1], width / 2, objSize * 7);
+
+        textSize(instructionsSize[2]);
+        fill(Koji.config.colors.instructionsColor);
+        textAlign(CENTER, TOP);
+        text(instructionsText[2], width / 2, objSize * 9);
+
 }
 
 //***** OLD WAY TO CREATE TOWERS. IT'S NOT RESPONSIVE

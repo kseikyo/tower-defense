@@ -1,10 +1,10 @@
 {
   "strings": {
-    "fontFamily": "https://fonts.googleapis.com/css?family=Russo+One",
-    "title": "Tower defense",
-    "instructions1": "This is an extension of the P5 Scaffold with added functionalities",
-    "instructions2": "Check out OVERVIEW for some tips on how to use this template",
-    "instructions3": "Let's see what you can make!",
+    "fontFamily": "https://fonts.googleapis.com/css?family=Squada+One",
+    "title": "Tower defense game",
+    "instructions1": "Click on tower images to place a new tower",
+    "instructions2": "You must stop the enemies from hitting the end",
+    "instructions3": "Collect gold to place new turrets and upgrade them!",
     "gameOverText": "GAME OVER",
     "highScoreText": "High Score:",
     "playButtonText": "PLAY NOW",

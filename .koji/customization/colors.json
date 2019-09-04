@@ -1,9 +1,10 @@
 {
   "colors": {
-    "backgroundColor": "#ffffff",
+    "backgroundColor": "#000c2c",
     "buttonTextColor": "#ffffff",
     "buttonColor": "#ed225d",
-    "titleColor": "#ed225d"
+    "titleColor": "#ffda5a",
+    "instructionsColor": "#dfdcea"
   },
   "@@editor": [
     {
@@ -30,6 +31,11 @@
         {
           "key": "buttonTextColor",
           "name": "Button Text Color",
+          "type": "color"
+        },
+        {
+          "key": "instructionsColor",
+          "name": "Game Instructions Color",
           "type": "color"
         }
       ]
