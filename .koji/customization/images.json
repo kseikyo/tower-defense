@@ -50,7 +50,7 @@
         {
           "key": "enemy_sprite",
           "name": "Enemy Sprite",
-          "description": "The first enemy sprite.",
+          "description": "The sprite that will be used to display the enemies. Please use images that each sprite are 64x64.",
           "type": "image"
         },
         {
