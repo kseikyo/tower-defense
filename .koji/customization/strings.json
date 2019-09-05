@@ -4,7 +4,7 @@
     "title": "Tower defense game",
     "instructions1": "Click on tower images to place a new tower",
     "instructions2": "You must stop the enemies from hitting the end",
-    "instructions3": "Collect gold to place new turrets and upgrade them!",
+    "instructions3": "Collect gold killing enemies to place new turrets and upgrade them!",
     "gameOverText": "GAME OVER",
     "highScoreText": "High Score:",
     "playButtonText": "PLAY NOW",

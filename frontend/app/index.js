@@ -99,6 +99,12 @@ function setup() {
     //Get the lower one, used for centering the game
     gameWidth = min(width, height);
 
+    playButton = new PlayButton();
+    soundButton = new SoundButton();
+    leaderboardButton = new LeaderboardButton();
+
+    isMobile = detectMobile();
+
     createCanvas(width, height);
 
     //Magically determine basic object size depending on size of the screen
@@ -128,9 +134,6 @@ function windowResized() {
     //Magically determine basic object size depending on size of the screen
     objSize = floor(min(floor(width / gameSize), floor(height / gameSize)) * sizeModifier);
 
-    stars = [];
-
-    spawnStarStart();
 }
 
 
@@ -144,8 +147,8 @@ function draw() {
     // }
     if(gameOver) {
         background(Koji.config.colors.backgroundColor);
-        image(imgCursor, mouseX, mouseY);
         showInstructions();
+        image(imgCursor, mouseX, mouseY);
     }else {
         for (let i = 0; i < cols; i++) {
             for (let j = 0; j < rows; j++) {
@@ -189,7 +192,7 @@ function draw() {
         if(launch_wave) {
             for(let i = 0; i < enemies.length; i++) {
                 //console.log(`1 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
-                if(enemies[i].walkedY === (Math.round(height / 5) * 5)+90 && enemies[i].isDown && !enemies[i].isRight) {
+                if(enemies[i].walkedY === (Math.round(height / 5) * 5)+65 && enemies[i].isDown && !enemies[i].isRight) {
                     enemies[i].actions += 1;
                     enemies[i].isRight = true;
                     enemies[i].isDown = !enemies[i].isDown;
@@ -206,7 +209,7 @@ function draw() {
                         enemies[i].isDown = false;
                     }
                     //console.log(`2 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
-                }else if(enemies[i].walkedY === 150 && !enemies[i].isDown && !enemies[i].isRight){
+                }else if(enemies[i].walkedY === 120 && !enemies[i].isDown && !enemies[i].isRight){
                     enemies[i].actions += 1;
                     enemies[i].isRight = true;
                     enemies[i].isDown = false;
@@ -232,7 +235,6 @@ function draw() {
                     enemies.splice(i,1);
                     launch_wave = false;
                 }
-                shift_path = !shift_path;
             }
         }
         if(!launch_wave){ 
@@ -248,6 +250,12 @@ function draw() {
 
 //===Handle mouse/tap input here
 function touchStarted() {
+
+    if (soundButton.checkClick()) {
+        toggleSound();
+        return;
+    }
+
     for(let i = 0; i < 5; i++) {
         enemies[i] = new Enemy({img : spritedata, position : {x: -10, y: i*(-100) }});
     }
@@ -308,6 +316,17 @@ function showInstructions() {
         textAlign(CENTER, TOP);
         text(instructionsText[2], width / 2, objSize * 9);
 
+        playButton.update();
+        playButton.btn.draw();
+
+        leaderboardButton.update();
+        leaderboardButton.btn.draw();
+}
+
+function init() {
+    gameOver = false;
+
+    score = 0;
 }
 
 //***** OLD WAY TO CREATE TOWERS. IT'S NOT RESPONSIVE
@@ -363,6 +382,10 @@ BACKSPACE, DELETE, ENTER, RETURN, TAB, ESCAPE, SHIFT, CONTROL, OPTION, ALT, UP_A
 function keyPressed() {
 
     //Ingame
+
+    if (keyCode == ESCAPE) {
+        gameOver = true;
+    }
     if (keyCode == UP_ARROW) {
         console.log("up")
     }
@@ -391,12 +414,4 @@ function keyPressed() {
 //Same usage as keyPressed, but is called on key released instead
 function keyReleased() {
 
-}
-
-
-//Takes the player to the "setScore" view for submitting the score to leaderboard
-//Notice that it makes use of the "score" variable. You can change this if you wish.
-function submitScore() {
-    window.setScore(score);
-    window.setAppView("setScore");
 }

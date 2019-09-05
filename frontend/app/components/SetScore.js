@@ -39,12 +39,15 @@ class SetScore extends Component {
                 },
             };
 
+            console.log(JSON.stringify(body));
+
             fetch(`${Koji.config.serviceMap.backend}/leaderboard/save`, {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(body),
+                
             })
                 .then((response) => response.json())
                 .then((jsonResponse) => {

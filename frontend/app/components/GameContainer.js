@@ -13,6 +13,8 @@ class GameContainer extends Component {
         require('script-loader!app/components/enemy.js');
         require('script-loader!app/components/tower.js');
         require('script-loader!app/components/player.js');
+        require('script-loader!app/clickable.js');
+        require('script-loader!app/utilities.js');
     }
 
     componentDidMount() {

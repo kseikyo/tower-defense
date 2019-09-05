@@ -1,10 +1,12 @@
 {
   "colors": {
     "backgroundColor": "#000c2c",
-    "buttonTextColor": "#ffffff",
-    "buttonColor": "#ed225d",
+    "buttonTextColor": "#0a0a31",
+    "buttonColor": "#ffda5a",
     "titleColor": "#ffda5a",
-    "instructionsColor": "#dfdcea"
+    "instructionsColor": "#dfdcea",
+    "buttonHoverColor": "#E8C034",
+    "buttonClickColor": "#ffda5a"
   },
   "@@editor": [
     {
@@ -31,6 +33,16 @@
         {
           "key": "buttonTextColor",
           "name": "Button Text Color",
+          "type": "color"
+        },
+        {
+          "key": "buttonHoverColor",
+          "name": "Button Hover Color",
+          "type": "color"
+        },
+        {
+          "key": "buttonClickColor",
+          "name": "Button Click Color",
           "type": "color"
         },
         {
