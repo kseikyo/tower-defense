@@ -122,6 +122,15 @@ class PlayButton {
     }
 }
 
+class StartRound extends PlayButton {
+    constructor() {
+        super();
+        this.btn.onRelease = () => {
+            isReady = true;
+        }
+    }
+}
+
 class LeaderboardButton {
     constructor() {
         this.btn = new Clickable();

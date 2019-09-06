@@ -38,6 +38,7 @@ let gameWidth;
 let sndTap;
 let tale = 9;
 let score;
+let isReady = false;
 
 //===This function is called before starting the game
 //Load everything here
