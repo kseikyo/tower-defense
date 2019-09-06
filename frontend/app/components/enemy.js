@@ -3,12 +3,15 @@ class Enemy {
     constructor({health = 5, position = {x: -10, y: -200}, img = null} = {}) {
         this.health = health;
         this.img = img;
-        this.position = position;
+        this.position = createVector(position.x, position.y);
         this.isDown = true;
         this.isRight = false;
         this.actions = 1;
         this.walkedY = 0;
         this.walkedX = 0;
+        this.sizeMod = 1; //Size multiplier on top of objSize
+        this.removable = false;
+        this.scale = createVector(1, 1);
     }
 
     
