@@ -128,6 +128,7 @@ class StartRound extends PlayButton {
         this.btn.onRelease = () => {
             isReady = true;
         }
+        this.btn.text = Koji.config.strings.startButtonText;
     }
 }
 

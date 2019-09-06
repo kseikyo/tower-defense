@@ -8,6 +8,7 @@
     "gameOverText": "GAME OVER",
     "highScoreText": "High Score:",
     "playButtonText": "PLAY NOW",
+    "startButtonText": "Launch wave",
     "scoreText": "Score:",
     "highscoreText": "High Score:",
     "highscoreGainedText": "New High Score!",
@@ -27,8 +28,32 @@
         {
           "key": "title",
           "name": "Title",
-          "description": "Example title displayed",
+          "description": "The title that is displayed on main menu.",
           "type": "text"
+        }, 
+        {
+          "key": "instructions1",
+          "name": "Instructions 1",
+          "description": "The first line of description.",
+          "type":"text"
+        }, 
+        {
+          "key": "instructions2",
+          "name": "Instructions 2",
+          "description": "The second line of description.",
+          "type":"text"
+        }, 
+        {
+          "key": "instructions3",
+          "name": "Instructions 3",
+          "description": "The third line of description.",
+          "type":"text"
+        }, 
+        {
+          "key": "health",
+          "name": "Health",
+          "description": "The players health.",
+          "type":"text"
         }
       ]
     }
