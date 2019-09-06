@@ -54,6 +54,12 @@
           "name": "Health",
           "description": "The players health.",
           "type":"text"
+        },
+        {
+          "key": "gameOverText",
+          "name": "Game Over text",
+          "description": "The text that will be displayed when the player loses.",
+          "type":"text"
         }
       ]
     }
