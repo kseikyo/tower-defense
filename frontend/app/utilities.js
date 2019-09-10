@@ -143,6 +143,26 @@ class StartRoundButton extends PlayButton {
     
 }
 
+class TowerButton extends PlayButton{
+    constructor(pos) {
+        super();
+        this.size = createVector(width/10, height/10);
+        this.pos = createVector(pos * width / 10 , 9 * height / rows + objSize * 2);
+    }
+    update() {
+
+        //Resize button to fit text
+        this.btn.textSize = floor(objSize * 0.9);
+        this.size = createVector(this.btn.textWidth * 1.5, this.btn.textSize * 3);
+
+        if (this.size.y > width) {
+            this.size.y = width;
+        }
+        this.btn.resize(this.size.x, this.size.y);
+        this.btn.locate(this.pos.x, this.pos.y);
+    }
+}
+
 class LeaderboardButton {
     constructor() {
         this.btn = new Clickable();

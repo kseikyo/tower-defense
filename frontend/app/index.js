@@ -104,6 +104,7 @@ function setup() {
     soundButton = new SoundButton();
     leaderboardButton = new LeaderboardButton();
     roundButton = new StartRoundButton();
+    towerButton = new TowerButton(9);
 
     isMobile = detectMobile();
 
@@ -159,7 +160,9 @@ function draw() {
                 if (i === 9) {
                     fill(255);
                     rect(x, y, width / cols, height / rows);
-                    towers[0].show(x + 20, y + 25, width / cols, height / rows);
+                    //towers[0].show(x + 20, y + 25, width / cols, height / rows);
+                    towerButton.update();
+                    towerButton.btn.draw();
                 }
                 else {
                     if (i % 2 === 0) {
@@ -261,17 +264,9 @@ function touchStarted() {
         toggleSound();
         return;
     }
-
-    for (let i = 0; i < 5; i++) {
-        enemies[i] = new Enemy({ img: spritedata, position: { x: -10, y: i * (-100) } });
-    }
-    for (let i = 0; i < enemies.length; i++) {
-        enemies[i].launch();
-    }
     //launch_wave = true;
     //Play sound
     //if (sndTap) sndTap.play();
-
 }
 
 function showInstructions() {
@@ -331,7 +326,14 @@ function showInstructions() {
 
 function init() {
     gameOver = false;
-
+    for (let i = 0; i < 5; i++) {
+        enemies[i] = new Enemy({ img: spritedata, position: { x: -10, y: i * (-100) } });
+    }
+    if(launch_wave){
+        for (let i = 0; i < enemies.length; i++) {
+            enemies[i].launch();
+        }
+    }
     score = 0;
 }
 
