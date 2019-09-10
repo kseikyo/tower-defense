@@ -122,14 +122,25 @@ class PlayButton {
     }
 }
 
-class StartRound extends PlayButton {
+class StartRoundButton extends PlayButton {
     constructor() {
         super();
         this.btn.onRelease = () => {
-            isReady = true;
+            launch_wave = true;
         }
-        this.btn.text = Koji.config.strings.startButtonText;
+        this.btn.text = Koji.config.strings.roundButtonText;
+        this.btn.textColor = Koji.config.colors.roundTextColor;
+        this.btn.onHover = function () {
+            this.color = Koji.config.colors.roundHoverColor;
+        }
+        this.btn.onOutside = function () {
+            this.color = Koji.config.colors.roundColor;
+        }
+        this.btn.onPress = function () {
+            this.color = Koji.config.colors.roundClickColor;
+        }
     }
+    
 }
 
 class LeaderboardButton {

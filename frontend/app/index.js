@@ -48,9 +48,9 @@ function preload() {
     //     imgBackground = loadImage(Koji.config.images.background);
     // }
 
-    if(Koji.config.images.enemy_sprite != "") {
-       spritedata = loadImage(Koji.config.images.enemy_sprite);
-       
+    if (Koji.config.images.enemy_sprite != "") {
+        spritedata = loadImage(Koji.config.images.enemy_sprite);
+
     }
     else {
         if (Koji.config.images.enemy1 != "") {
@@ -68,8 +68,8 @@ function preload() {
             enemies.push(imgEnemy3);
         }
     }
-    
-    if(Koji.config.images.cursor != "") {
+
+    if (Koji.config.images.cursor != "") {
         imgCursor = loadImage(Koji.config.images.cursor);
     }
     if (Koji.config.images.ground_1 != "") {
@@ -90,7 +90,7 @@ function setup() {
     //Set our canvas size to full window size
     width = window.innerWidth;
     height = window.innerHeight;
-    
+
     noCursor();
     let sizeModifier = 0.65;
     if (height > width) {
@@ -103,6 +103,7 @@ function setup() {
     playButton = new PlayButton();
     soundButton = new SoundButton();
     leaderboardButton = new LeaderboardButton();
+    roundButton = new StartRoundButton();
 
     isMobile = detectMobile();
 
@@ -111,7 +112,7 @@ function setup() {
     //Magically determine basic object size depending on size of the screen
     objSize = floor(min(floor(width / gameSize), floor(height / gameSize)) * sizeModifier);
 
-   
+
     score = 0;
 }
 
@@ -130,7 +131,7 @@ function windowResized() {
     //Get the lower one, used for centering the game
     gameWidth = min(width, height);
 
-    
+
 
     //Magically determine basic object size depending on size of the screen
     objSize = floor(min(floor(width / gameSize), floor(height / gameSize)) * sizeModifier);
@@ -139,42 +140,42 @@ function windowResized() {
 
 
 function draw() {
-    
+
     //Draw background if there is one or a solid color
     // if (imgBackground) {
     //     background(imgBackground);
     // } else {
     //     background(Koji.config.colors.backgroundColor);
     // }
-    if(gameOver) {
+    if (gameOver) {
         background(Koji.config.colors.backgroundColor);
         showInstructions();
         image(imgCursor, mouseX, mouseY);
-    }else {
+    } else {
         for (let i = 0; i < cols; i++) {
             for (let j = 0; j < rows; j++) {
-                let x = i* width/cols;
-                let y = j* height/rows;
-                if( i === 9 ) {
+                let x = i * width / cols;
+                let y = j * height / rows;
+                if (i === 9) {
                     fill(255);
-                    rect(x, y, width/cols, height/rows);
-                    towers[0].show(x+20, y+25, width/cols, height/rows);
+                    rect(x, y, width / cols, height / rows);
+                    towers[0].show(x + 20, y + 25, width / cols, height / rows);
                 }
                 else {
                     if (i % 2 === 0) {
-                        image(imgTile_1, x, y, width/cols, height/rows);
-                    }else if((i === 1 && j === 9) || (i === 3 && j === 0) || (i === 5 && j === 9)  || (i === 7 && j === 0) ){
-                        image(imgTile_1, x, y, width/cols, height/rows);
-                    }else
-                        image(imgTile_2, x, y, width/cols, height/rows);
+                        image(imgTile_1, x, y, width / cols, height / rows);
+                    } else if ((i === 1 && j === 9) || (i === 3 && j === 0) || (i === 5 && j === 9) || (i === 7 && j === 0)) {
+                        image(imgTile_1, x, y, width / cols, height / rows);
+                    } else
+                        image(imgTile_2, x, y, width / cols, height / rows);
                 }
             }
-            
-            
+
+
         }
 
 
-        
+
 
         //  Drawing tower being dragged
         // for(let i = 0 ; i < len; i++) {
@@ -186,65 +187,69 @@ function draw() {
         //         towers[i].show(towers[i].position.x, towers[i].position.y);
         //     }
         // }
+
+
         
 
-        image(imgCursor, mouseX, mouseY);
-        
-        if(launch_wave) {
-            for(let i = 0; i < enemies.length; i++) {
+        if (launch_wave) {
+            for (let i = 0; i < enemies.length; i++) {
                 //console.log(`1 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
-                if(enemies[i].walkedY === (Math.round(height / 5) * 5)+65 && enemies[i].isDown && !enemies[i].isRight) {
+                if (enemies[i].walkedY === (Math.round(height / 5) * 5) + 65 && enemies[i].isDown && !enemies[i].isRight) {
                     enemies[i].actions += 1;
                     enemies[i].isRight = true;
                     enemies[i].isDown = !enemies[i].isDown;
                 }
-                else if(enemies[i].walkedX === (Math.round((width/5) / 5)* 5) && enemies[i].isRight && !enemies[i].isDown) {
+                else if (enemies[i].walkedX === (Math.round((width / 5) / 5) * 5) && enemies[i].isRight && !enemies[i].isDown) {
                     enemies[i].actions += 1;
-                    if(enemies[i].actions === 5 || enemies[i].actions === 9) {
+                    if (enemies[i].actions === 5 || enemies[i].actions === 9) {
                         enemies[i].walkedX = 0;
                         enemies[i].isRight = false;
                         enemies[i].isDown = true;
-                    }else {
+                    } else {
                         enemies[i].walkedX = 0;
                         enemies[i].isRight = false;
                         enemies[i].isDown = false;
                     }
                     //console.log(`2 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
-                }else if(enemies[i].walkedY === 120 && !enemies[i].isDown && !enemies[i].isRight){
+                } else if (enemies[i].walkedY === 120 && !enemies[i].isDown && !enemies[i].isRight) {
                     enemies[i].actions += 1;
                     enemies[i].isRight = true;
                     enemies[i].isDown = false;
                     //console.log(`3 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
                 }
-                
-                if(enemies[i].isDown) {
+
+                if (enemies[i].isDown) {
                     enemies[i].show();
                     enemies[i].position.y += speedY;
                     enemies[i].walkedY += speedY;
                 }
-                else if(enemies[i].isRight){
+                else if (enemies[i].isRight) {
                     enemies[i].show();
                     enemies[i].position.x += speedX;
                     enemies[i].walkedX += speedX;
                 }
-                else if(!enemies[i].isDown && !enemies.isRight) {
+                else if (!enemies[i].isDown && !enemies.isRight) {
                     enemies[i].show();
                     enemies[i].position.y -= speedY;
                     enemies[i].walkedY -= speedY;
                 }
-                if(enemies[i].actions === 10) {
-                    enemies.splice(i,1);
+                if (enemies[i].actions === 10) {
+                    enemies.splice(i, 1);
                     launch_wave = false;
                 }
             }
         }
-        if(!launch_wave){ 
+        if (!launch_wave) {
             fill(0);
             textAlign(CENTER, TOP);
             textSize(32);
-            text('Press a mouse button to launch a wave!', 0, 10, width);
+            roundButton.update();
+            roundButton.btn.draw();
+            // text('Press a mouse button to launch a wave!', 0, 10, width);
         }
-    }
+        image(imgCursor, mouseX, mouseY);
+    
+}
 
 }
 
@@ -257,16 +262,16 @@ function touchStarted() {
         return;
     }
 
-    for(let i = 0; i < 5; i++) {
-        enemies[i] = new Enemy({img : spritedata, position : {x: -10, y: i*(-100) }});
+    for (let i = 0; i < 5; i++) {
+        enemies[i] = new Enemy({ img: spritedata, position: { x: -10, y: i * (-100) } });
     }
-    for(let i = 0; i < enemies.length; i++) {
+    for (let i = 0; i < enemies.length; i++) {
         enemies[i].launch();
     }
-    launch_wave = true;
+    //launch_wave = true;
     //Play sound
     //if (sndTap) sndTap.play();
-    
+
 }
 
 function showInstructions() {
@@ -284,44 +289,44 @@ function showInstructions() {
     text(Koji.config.strings.title, width / 2, objSize * 1.5);
 
     //===Draw instructions
-        let instructionsText = [];
-        instructionsText[0] = Koji.config.strings.instructions1;
-        instructionsText[1] = Koji.config.strings.instructions2;
-        instructionsText[2] = Koji.config.strings.instructions3;
+    let instructionsText = [];
+    instructionsText[0] = Koji.config.strings.instructions1;
+    instructionsText[1] = Koji.config.strings.instructions2;
+    instructionsText[2] = Koji.config.strings.instructions3;
 
-        let instructionsSize = [];
+    let instructionsSize = [];
 
-        for (let i = 0; i < instructionsText.length; i++) {
-            instructionsSize[i] = floor(objSize * 0.75);
+    for (let i = 0; i < instructionsText.length; i++) {
+        instructionsSize[i] = floor(objSize * 0.75);
+        textSize(instructionsSize[i]);
+
+        //Resize text until it fits the screen
+        while (textWidth(instructionsText[i]) > width * 0.9) {
+            instructionsSize[i] *= 0.9;
             textSize(instructionsSize[i]);
-
-            //Resize text until it fits the screen
-            while (textWidth(instructionsText[i]) > width * 0.9) {
-                instructionsSize[i] *= 0.9;
-                textSize(instructionsSize[i]);
-            }
         }
+    }
 
-        textSize(instructionsSize[0]);
-        fill(Koji.config.colors.instructionsColor);
-        textAlign(CENTER, TOP);
-        text(instructionsText[0], width / 2, objSize * 5);
+    textSize(instructionsSize[0]);
+    fill(Koji.config.colors.instructionsColor);
+    textAlign(CENTER, TOP);
+    text(instructionsText[0], width / 2, objSize * 5);
 
-        textSize(instructionsSize[1]);
-        fill(Koji.config.colors.instructionsColor);
-        textAlign(CENTER, TOP);
-        text(instructionsText[1], width / 2, objSize * 7);
+    textSize(instructionsSize[1]);
+    fill(Koji.config.colors.instructionsColor);
+    textAlign(CENTER, TOP);
+    text(instructionsText[1], width / 2, objSize * 7);
 
-        textSize(instructionsSize[2]);
-        fill(Koji.config.colors.instructionsColor);
-        textAlign(CENTER, TOP);
-        text(instructionsText[2], width / 2, objSize * 9);
+    textSize(instructionsSize[2]);
+    fill(Koji.config.colors.instructionsColor);
+    textAlign(CENTER, TOP);
+    text(instructionsText[2], width / 2, objSize * 9);
 
-        playButton.update();
-        playButton.btn.draw();
+    playButton.update();
+    playButton.btn.draw();
 
-        leaderboardButton.update();
-        leaderboardButton.btn.draw();
+    leaderboardButton.update();
+    leaderboardButton.btn.draw();
 }
 
 function init() {
@@ -346,10 +351,10 @@ function init() {
 //                 offsetX = mouseX;
 //                 offsetY = mouseY;
 //             }
-            
+
 //         }
 //     }
-    
+
 //}
 
 // function mouseReleased() {
@@ -358,7 +363,7 @@ function init() {
 
 //         if(towers[i].isPlaced || !towers[i].isDragging)
 //             continue;
-        
+
 //         towers[i].isPlaced = true;
 //         towers[i].isDragging = false;
 //     }
@@ -370,7 +375,7 @@ function touchMoved() {
 
 function touchEnded() {
 
-    
+
 }
 
 //Keyboard input

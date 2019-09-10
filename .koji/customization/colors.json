@@ -2,11 +2,15 @@
   "colors": {
     "backgroundColor": "#000c2c",
     "buttonTextColor": "#0a0a31",
-    "buttonColor": "#ffda5a",
     "titleColor": "#ffda5a",
     "instructionsColor": "#dfdcea",
+    "buttonColor": "#ffda5a",
     "buttonHoverColor": "#E8C034",
-    "buttonClickColor": "#ffda5a"
+    "buttonClickColor": "#ffda5a",
+    "roundColor": "#000c22",
+    "roundTextColor": "#ffda5a",
+    "roundHoverColor": "#002691",
+    "roundClickColor": "#000c2c"
   },
   "@@editor": [
     {
@@ -26,13 +30,18 @@
           "type": "color"
         },
         {
-          "key": "buttonColor",
-          "name": "Button Color",
+          "key": "buttonTextColor",
+          "name": "Button Text Color",
           "type": "color"
         },
         {
-          "key": "buttonTextColor",
-          "name": "Button Text Color",
+          "key": "roundTextColor",
+          "name": "Round button Text Color",
+          "type": "color"
+        },
+        {
+          "key": "buttonColor",
+          "name": "Button Color",
           "type": "color"
         },
         {
@@ -43,6 +52,21 @@
         {
           "key": "buttonClickColor",
           "name": "Button Click Color",
+          "type": "color"
+        },
+        {
+          "key": "roundColor",
+          "name": "Round Button Color",
+          "type": "color"
+        },
+        {
+          "key": "roundHoverColor",
+          "name": "Round Button Hover Color",
+          "type": "color"
+        },
+        {
+          "key": "roundClickColor",
+          "name": "Round Button Click Color",
           "type": "color"
         },
         {
