@@ -196,8 +196,8 @@ function draw() {
 
         if (launch_wave) {
             for (let i = 0; i < enemies.length; i++) {
-                //console.log(`1 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
-                if (enemies[i].walkedY === (Math.round(height / 5) * 5) + 65 - (i * -10) && enemies[i].isDown && !enemies[i].isRight) {
+                console.log(`I = ${i} 1 X = ${enemies[i].position.x} Y = ${enemies[i].position.y} wX ${enemies[i].walkedX} wY ${enemies[i].walkedY}`)
+                if (enemies[i].walkedY - (i * 10) === (Math.round(height / 5 ) * 5) + 65 && enemies[i].isDown && !enemies[i].isRight) {
                     enemies[i].actions += 1;
                     enemies[i].isRight = true;
                     enemies[i].isDown = !enemies[i].isDown;
@@ -214,7 +214,7 @@ function draw() {
                         enemies[i].isDown = false;
                     }
                     //console.log(`2 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
-                } else if (enemies[i].walkedY === 120 && !enemies[i].isDown && !enemies[i].isRight) {
+                } else if (enemies[i].walkedY === 120 + (i * 10) && !enemies[i].isDown && !enemies[i].isRight) {
                     enemies[i].actions += 1;
                     enemies[i].isRight = true;
                     enemies[i].isDown = false;
@@ -326,14 +326,7 @@ function showInstructions() {
 
 function init() {
     gameOver = false;
-    for (let i = 0; i < 5; i++) {
-        enemies[i] = new Enemy({ img: spritedata, position: { x: -10, y: i * (-100) } });
-    }
-    if(launch_wave){
-        for (let i = 0; i < enemies.length; i++) {
-            enemies[i].launch();
-        }
-    }
+    
     score = 0;
 }
 
