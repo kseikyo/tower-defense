@@ -197,7 +197,7 @@ function draw() {
         if (launch_wave) {
             for (let i = 0; i < enemies.length; i++) {
                 //console.log(`1 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
-                if (enemies[i].walkedY === (Math.round(height / 5) * 5) + 65 && enemies[i].isDown && !enemies[i].isRight) {
+                if (enemies[i].walkedY === (Math.round(height / 5) * 5) + 65 - (i * -10) && enemies[i].isDown && !enemies[i].isRight) {
                     enemies[i].actions += 1;
                     enemies[i].isRight = true;
                     enemies[i].isDown = !enemies[i].isDown;
