@@ -169,55 +169,20 @@ function draw() {
         //     }
         // }
 
-
-        
-
         if (launch_wave) {
             for (let i = 0; i < enemies.length; i++) {
-                console.log(`I = ${i} 1 X = ${enemies[i].position.x} Y = ${enemies[i].position.y} wX ${enemies[i].walkedX} wY ${enemies[i].walkedY}`)
-                if (enemies[i].walkedY - (i * 10) === (Math.round(height / 5 ) * 5) + 65 && enemies[i].isDown && !enemies[i].isRight) {
-                    enemies[i].actions += 1;
-                    enemies[i].isRight = true;
-                    enemies[i].isDown = !enemies[i].isDown;
-                }
-                else if (enemies[i].walkedX === (Math.round((width / 5) / 5) * 5) && enemies[i].isRight && !enemies[i].isDown) {
-                    enemies[i].actions += 1;
-                    if (enemies[i].actions === 5 || enemies[i].actions === 9) {
-                        enemies[i].walkedX = 0;
-                        enemies[i].isRight = false;
-                        enemies[i].isDown = true;
-                    } else {
-                        enemies[i].walkedX = 0;
-                        enemies[i].isRight = false;
-                        enemies[i].isDown = false;
-                    }
-                    //console.log(`2 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
-                } else if (enemies[i].walkedY === 120 + (i * 10) && !enemies[i].isDown && !enemies[i].isRight) {
-                    enemies[i].actions += 1;
-                    enemies[i].isRight = true;
-                    enemies[i].isDown = false;
-                    //console.log(`3 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
-                }
-
-                if (enemies[i].isDown) {
+                if (enemies[i].shouldGoDown()) {
                     enemies[i].goDown(speedY);
                 }
-                else if (enemies[i].isRight) {
+                else if (enemies[i].shouldGoRight()) {
                     enemies[i].goRight(speedX);
                 }
-                else if (!enemies[i].isDown && !enemies.isRight) {
+                else if (enemies[i].shouldGoUp()) {
                     enemies[i].goUp(speedY);
-                }
-                if (enemies[i].actions === 10) {
-                    enemies.splice(i, 1);
-                    if(enemies[0] == undefined) {
-                        launch_wave = false;
-                    }
-                }
-                
+                }    
             }
         }
-       else{
+        else{
             fill(0);
             textAlign(CENTER, TOP);
             textSize(32);
@@ -325,7 +290,8 @@ function drawBackground() {
 
 function init() {
     gameOver = false;
-    
+    enemies = [];
+    launch_wave = false;
     score = 0;
 }
 
@@ -362,6 +328,42 @@ function init() {
 //         towers[i].isDragging = false;
 //     }
 // }
+
+
+// OLD ENEMIES PATH 
+// console.log(`I = ${i} 1 X = ${enemies[i].position.x} Y = ${enemies[i].position.y} wX ${enemies[i].walkedX} wY ${enemies[i].walkedY}`)
+                // if (enemies[i].walkedY - (i * 10) === (Math.round(height / 5 ) * 5) + 65 && enemies[i].isDown && !enemies[i].isRight) {
+                //     enemies[i].actions += 1;
+                //     enemies[i].isRight = true;
+                //     enemies[i].isDown = !enemies[i].isDown;
+                // }
+                // else if (enemies[i].walkedX === (Math.round((width / 5) / 5) * 5) && enemies[i].isRight && !enemies[i].isDown) {
+                //     enemies[i].actions += 1;
+                //     if (enemies[i].actions === 5 || enemies[i].actions === 9) {
+                //         enemies[i].walkedX = 0;
+                //         enemies[i].isRight = false;
+                //         enemies[i].isDown = true;
+                //     } else {
+                //         enemies[i].walkedX = 0;
+                //         enemies[i].isRight = false;
+                //         enemies[i].isDown = false;
+                //     }
+                //     //console.log(`2 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
+                // } else if (enemies[i].walkedY === 120 + (i * 10) && !enemies[i].isDown && !enemies[i].isRight) {
+                //     enemies[i].actions += 1;
+                //     enemies[i].isRight = true;
+                //     enemies[i].isDown = false;
+                //     //console.log(`3 X = ${enemies[0].position.x} Y = ${enemies[0].position.y} wX ${enemies[0].walkedX} wY ${enemies[0].walkedY}`)
+                // }
+
+
+                
+                // if (enemies[i].actions === 10) {
+                //     enemies.splice(i, 1);
+                //     if(enemies[0] == undefined) {
+                //         launch_wave = false;
+                //     }
+                // }
 
 function touchMoved() {
 
@@ -406,7 +408,7 @@ function keyPressed() {
     }
 
     if (key == 'p') {
-        console.log("Pressed: p")
+
     }
 
 }

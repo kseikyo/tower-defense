@@ -6,24 +6,21 @@ class Enemy {
         this.position = createVector(position.x, position.y);
         this.isDown = true;
         this.isRight = false;
-        this.actions = 1;
-        this.walkedY = 0;
+        //this.walkedY = 0;
         this.walkedX = 0;
         this.sizeMod = 6; //Size multiplier on top of objSize
-        this.scale = createVector(1, 1);
+        this.scale = objSize * this.sizeMod;
     }
-
     
 
     show() {
-        let size = objSize * this.sizeMod;
+        
         if (this.img) {
             //*** This is loading the sprite. Each frame shall be 64x64 with this fixed code.
             //*** If you want to add sprites with different sizes. Change the 64's by the image size
             for (let i = 0; i < this.img.width - 64; i += 64) {
-                // PARAMETERS {i : pixel position on x axis, 0 : pixel position in y axis, 64 : width, 64 : height}
-                //for(let j = enemy_path_x[0]; j < enemy_path_x)
-                image(this.img.get(i, 0, 64, 64), this.position.x, this.position.y, size, size);
+                // PARAMS {i : pixel position on x axis, 0 : pixel position in y axis, 64 : width, 64 : height}
+                image(this.img.get(i, 0, 64, 64), this.position.x, this.position.y, this.scale, this.scale);
             }
         }
         else {
@@ -51,20 +48,45 @@ class Enemy {
     }
 
     shouldGoUp() {
-        return (this.position.y > 0 && !this.isDown && !this.isRight);
+        if(this.position.y >= -70 && !this.isDown && !this.isRight) {
+            return true;
+        }
+        this.isRight = true;
+        return false;
     }
 
     shouldGoRight() {
-        return ((this.position.y < 0 || this.position.y > height) && this.isRight);
+        if(this.isRight && this.walkedX <= width/7+this.scale) {
+            return true;
+        }else if(!this.isDown && this.isRight){
+            this.walkedX = 0;
+            this.isRight = false;
+            this.isDown  = false;
+            return false;
+        }else {
+            this.walkedX  = 0;
+            this.isRight  = false;
+            this.isDown   = true;
+            return true;
+        }
     }
 
     shouldGoDown() {
-        return (this.position.y <1)
+        if(this.isDown && this.position.y >= -70 && this.position.y < height-this.scale) {
+            return true;
+        }
+        else if(this.wentDown){
+            this.isDown  = false;
+            this.isRight = true;
+            return false;
+        }
+        return false;
+        
     }
 
     launch() {
         this.position.x = -10;
-        this.position.y = 0;
+        this.position.y = -70;
     }
 
 }
