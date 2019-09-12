@@ -49,8 +49,10 @@ class Enemy {
 
     shouldGoUp() {
         if(this.position.y >= -70 && !this.isDown && !this.isRight) {
+            console.log(`${this.isDown} ${this.isRight}`);
             return true;
         }
+        this.isDown  = true;
         this.isRight = true;
         return false;
     }
@@ -63,19 +65,19 @@ class Enemy {
             this.isRight = false;
             this.isDown  = false;
             return false;
-        }else {
+        }else if(this.isRight){
             this.walkedX  = 0;
             this.isRight  = false;
             this.isDown   = true;
-            return true;
+            return false;
         }
     }
 
     shouldGoDown() {
-        if(this.isDown && this.position.y >= -70 && this.position.y < height-this.scale) {
+        if(this.isDown && !this.isRight && this.position.y >= -70 && this.position.y < height-this.scale) {
             return true;
         }
-        else if(this.wentDown){
+        else if(!this.isRight && this.isDown){
             this.isDown  = false;
             this.isRight = true;
             return false;
