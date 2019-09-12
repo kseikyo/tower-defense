@@ -126,15 +126,18 @@ class StartRoundButton extends PlayButton {
     constructor() {
         super();
         this.btn.onRelease = () => {
-            for (let i = 0; i < 5; i++) {
-                enemies[i] = new Enemy({ img: spritedata, position: { x: -10, y: i * (-100) } });
-            }
-            if(launch_wave){
-                for (let i = 0; i < enemies.length; i++) {
-                    enemies[i].launch();
+            if(!launch_wave){
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        enemies[i] = new Enemy({ img: spritedata, position: { x: -10, y: -200 } });
+                        enemies[i].launch();
+                    }, i*1000); 
                 }
+                
+                launch_wave = true;
+                
             }
-            launch_wave = true;
+            
 
         }
         this.btn.text = Koji.config.strings.roundButtonText;

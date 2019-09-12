@@ -153,29 +153,7 @@ function draw() {
         showInstructions();
         image(imgCursor, mouseX, mouseY);
     } else {
-        for (let i = 0; i < cols; i++) {
-            for (let j = 0; j < rows; j++) {
-                let x = i * width / cols;
-                let y = j * height / rows;
-                if (i === 9) {
-                    fill(255);
-                    rect(x, y, width / cols, height / rows);
-                    //towers[0].show(x + 20, y + 25, width / cols, height / rows);
-                    towerButton.update();
-                    towerButton.btn.draw();
-                }
-                else {
-                    if (i % 2 === 0) {
-                        image(imgTile_1, x, y, width / cols, height / rows);
-                    } else if ((i === 1 && j === 9) || (i === 3 && j === 0) || (i === 5 && j === 9) || (i === 7 && j === 0)) {
-                        image(imgTile_1, x, y, width / cols, height / rows);
-                    } else
-                        image(imgTile_2, x, y, width / cols, height / rows);
-                }
-            }
-
-
-        }
+        drawBackground();
 
 
 
@@ -222,27 +200,24 @@ function draw() {
                 }
 
                 if (enemies[i].isDown) {
-                    enemies[i].show();
-                    enemies[i].position.y += speedY;
-                    enemies[i].walkedY += speedY;
+                    enemies[i].goDown(speedY);
                 }
                 else if (enemies[i].isRight) {
-                    enemies[i].show();
-                    enemies[i].position.x += speedX;
-                    enemies[i].walkedX += speedX;
+                    enemies[i].goRight(speedX);
                 }
                 else if (!enemies[i].isDown && !enemies.isRight) {
-                    enemies[i].show();
-                    enemies[i].position.y -= speedY;
-                    enemies[i].walkedY -= speedY;
+                    enemies[i].goUp(speedY);
                 }
                 if (enemies[i].actions === 10) {
                     enemies.splice(i, 1);
-                    launch_wave = false;
+                    if(enemies[0] == undefined) {
+                        launch_wave = false;
+                    }
                 }
+                
             }
         }
-        if (!launch_wave) {
+       else{
             fill(0);
             textAlign(CENTER, TOP);
             textSize(32);
@@ -322,6 +297,30 @@ function showInstructions() {
 
     leaderboardButton.update();
     leaderboardButton.btn.draw();
+}
+
+function drawBackground() {
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            let x = i * width / cols;
+            let y = j * height / rows;
+            if (i === 9) {
+                fill(255);
+                rect(x, y, width / cols, height / rows);
+                //towers[0].show(x + 20, y + 25, width / cols, height / rows);
+                towerButton.update();
+                towerButton.btn.draw();
+            }
+            else {
+                if (i % 2 === 0) {
+                    image(imgTile_1, x, y, width / cols, height / rows);
+                } else if ((i === 1 && j === 9) || (i === 3 && j === 0) || (i === 5 && j === 9) || (i === 7 && j === 0)) {
+                    image(imgTile_1, x, y, width / cols, height / rows);
+                } else
+                    image(imgTile_2, x, y, width / cols, height / rows);
+            }
+        }
+    }
 }
 
 function init() {
