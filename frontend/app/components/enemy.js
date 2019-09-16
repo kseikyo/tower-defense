@@ -48,13 +48,13 @@ class Enemy {
     }
 
     shouldGoUp() {
-        if(this.position.y >= -70 && !this.isDown && !this.isRight) {
-            console.log(`${this.isDown} ${this.isRight}`);
+        if(this.position.y === -70 && !this.isDown && !this.isRight) {
+            this.isRight = true;
+            return false;
+        }
+        else if(!this.isRight && !this.isDown) {
             return true;
         }
-        this.isDown  = true;
-        this.isRight = true;
-        return false;
     }
 
     shouldGoRight() {
@@ -74,16 +74,15 @@ class Enemy {
     }
 
     shouldGoDown() {
-        if(this.isDown && !this.isRight && this.position.y >= -70 && this.position.y < height-this.scale) {
-            return true;
-        }
-        else if(!this.isRight && this.isDown){
-            this.isDown  = false;
+        if(this.isDown && this.position.y >= height-this.scale) {
             this.isRight = true;
+            this.isDown  = false;
             return false;
         }
-        return false;
-        
+        else if(!this.isRight && this.isDown){
+            this.isDown  = true;
+            return true;
+        }
     }
 
     launch() {
