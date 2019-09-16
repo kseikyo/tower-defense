@@ -174,11 +174,11 @@ function draw() {
                 if (enemies[i].shouldGoDown()) {
                     enemies[i].goDown(speedY);
                 }
-                else if (enemies[i].shouldGoRight()) {
-                    enemies[i].goRight(speedX);
-                }
                 else if (enemies[i].shouldGoUp()) {                    
                     enemies[i].goUp(speedY);
+                }
+                else if (enemies[i].shouldGoRight()) {
+                    enemies[i].goRight(speedX);
                 }    
             }
         }
