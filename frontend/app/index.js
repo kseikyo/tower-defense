@@ -171,7 +171,13 @@ function draw() {
 
         if (launch_wave) {
             for (let i = 0; i < enemies.length; i++) {
-                enemies[i].move(speedX, speedY); 
+                enemies[i].move(speedX, speedY);
+                if(enemies[i].isRemovable) {
+                    enemies.splice(i, 1);
+                    if(enemies[0] == undefined) {
+                        launch_wave = false;
+                    }
+                }
             }
         }
         else{

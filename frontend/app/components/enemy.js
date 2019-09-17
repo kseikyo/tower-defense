@@ -10,6 +10,7 @@ class Enemy {
         this.walkedX = 0;
         this.sizeMod = 6; //Size multiplier on top of objSize
         this.scale = objSize * this.sizeMod;
+        this.isRemovable = false;
     }
     
 
@@ -83,9 +84,16 @@ class Enemy {
         }
     }
 
+    dealtDamage() {
+        if(this.position.y === height-this.scale && this.position.x >= width/1.25) {
+            this.isRemovable = true;
+        }
+    }
+
     move(speedX,speedY) {
         if(this.shouldGoDown()) {
-            this.goDown(speedY)
+            this.goDown(speedY);
+            this.dealtDamage();
         } else if(this.shouldGoRight()) {
             this.goRight(speedX);
         } else if(this.shouldGoUp()) {
