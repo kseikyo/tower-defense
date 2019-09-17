@@ -109,6 +109,7 @@ function setup() {
     isMobile = detectMobile();
 
     createCanvas(width, height);
+    extraCanvas = createGraphics(width, height);
 
     //Magically determine basic object size depending on size of the screen
     objSize = floor(min(floor(width / gameSize), floor(height / gameSize)) * sizeModifier);
@@ -321,7 +322,6 @@ function init() {
 
 //         if(towers[i].isPlaced || !towers[i].isDragging)
 //             continue;
-
 //         towers[i].isPlaced = true;
 //         towers[i].isDragging = false;
 //     }
@@ -368,7 +368,6 @@ function touchMoved() {
 }
 
 function touchEnded() {
-
 
 }
 
