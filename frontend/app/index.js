@@ -171,7 +171,7 @@ function draw() {
 
         if (launch_wave) {
             for (let i = 0; i < enemies.length; i++) {
-                enemies[i].move(); 
+                enemies[i].move(speedX, speedY); 
             }
         }
         else{

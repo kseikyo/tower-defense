@@ -127,7 +127,7 @@ class StartRoundButton extends PlayButton {
         super();
         this.btn.onRelease = () => {
             if(!launch_wave){
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < 1; i++) {
                     setTimeout(() => {
                         enemies[i] = new Enemy({ img: spritedata, position: { x: -10, y: -80 } });
                         enemies[i].launch();

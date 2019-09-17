@@ -48,6 +48,7 @@ class Enemy {
     shouldGoUp() {
         if(this.position.y <= -70 && !this.isDown && !this.isRight) {
             this.isRight = true;
+            this.isDown  = true;
             return false;
         }
         else if(!this.isRight && !this.isDown) {
@@ -56,12 +57,13 @@ class Enemy {
     }
 
     shouldGoRight() {
-        if(this.isRight && this.walkedX >= width/7+this.scale) {
+        if(this.isRight && this.walkedX >= width/7+(this.scale/1.5)) {
             this.isRight = false;
             if(this.isDown) {
                 this.walkedX = 0;
                 return false;
             }
+            this.walkedX = 0;
             return false;
         }
         else if(this.isRight) {
