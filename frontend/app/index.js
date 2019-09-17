@@ -171,15 +171,7 @@ function draw() {
 
         if (launch_wave) {
             for (let i = 0; i < enemies.length; i++) {
-                if (enemies[i].shouldGoDown()) {
-                    enemies[i].goDown(speedY);
-                }
-                else if (enemies[i].shouldGoUp()) {                    
-                    enemies[i].goUp(speedY);
-                }
-                else if (enemies[i].shouldGoRight()) {
-                    enemies[i].goRight(speedX);
-                }    
+                enemies[i].move(); 
             }
         }
         else{

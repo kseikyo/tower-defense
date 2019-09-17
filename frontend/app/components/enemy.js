@@ -32,13 +32,11 @@ class Enemy {
     goDown(speed) {
         this.show();
         this.position.y += speed;
-        this.walkedY += speed;
     }
 
     goUp(speed) {
         this.show();
         this.position.y -= speed;
-        this.walkedY -= speed;
     }
 
     goRight(speed) {
@@ -48,7 +46,7 @@ class Enemy {
     }
 
     shouldGoUp() {
-        if(this.position.y === -70 && !this.isDown && !this.isRight) {
+        if(this.position.y <= -70 && !this.isDown && !this.isRight) {
             this.isRight = true;
             return false;
         }
@@ -60,17 +58,14 @@ class Enemy {
     shouldGoRight() {
         if(this.isRight && this.walkedX >= width/7+this.scale) {
             this.isRight = false;
+            if(this.isDown) {
+                this.walkedX = 0;
+                return false;
+            }
             return false;
-        }else if(!this.isDown && this.isRight){
-            this.walkedX = 0;
-            this.isRight = false;
-            this.isDown  = false;
-            return false;
-        }else if(this.isRight){
-            this.walkedX  = 0;
-            this.isRight  = false;
-            this.isDown   = true;
-            return false;
+        }
+        else if(this.isRight) {
+            return true;
         }
     }
 
@@ -83,6 +78,16 @@ class Enemy {
         else if(!this.isRight && this.isDown){
             this.isDown  = true;
             return true;
+        }
+    }
+
+    move(speedX,speedY) {
+        if(this.shouldGoDown()) {
+            this.goDown(speedY)
+        } else if(this.shouldGoRight()) {
+            this.goRight(speedX);
+        } else if(this.shouldGoUp()) {
+            this.goUp(speedY);
         }
     }
 
