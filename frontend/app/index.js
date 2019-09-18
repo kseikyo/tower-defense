@@ -4,6 +4,12 @@ let cursor;
 let imgTile_1;
 let imgTile_2;
 
+// PLAYER
+let player = {
+    money: 2,
+    life: 5
+};
+
 // GAME OBJECTS
 let towers = [];
 let enemies = [];
@@ -39,6 +45,7 @@ let sndTap;
 let tale = 9;
 let score;
 let isReady = false;
+let towerButtons = [];
 
 //===This function is called before starting the game
 //Load everything here
@@ -78,10 +85,10 @@ function preload() {
     if (Koji.config.images.ground_2 != "") {
         imgTile_2 = loadImage(Koji.config.images.ground_2);
     }
+
     //===Load Sounds here
     //Include a simple IF check to make sure there is a sound in config, also include a check when you try to play the sound, so in case there isn't one, it will just be ignored instead of crashing the game
     //if (Koji.config.sounds.tap) sndTap = loadSound(Koji.config.sounds.tap);
-    towers[0] = new Tower();
 }
 
 
@@ -104,7 +111,10 @@ function setup() {
     soundButton = new SoundButton();
     leaderboardButton = new LeaderboardButton();
     roundButton = new StartRoundButton();
-    towerButton = new TowerButton(9);
+
+    for(let i = 0; i < cols; i++) {
+        towerButtons[i] = new TowerButton(i);
+    }
 
     isMobile = detectMobile();
 
@@ -149,15 +159,16 @@ function draw() {
     // } else {
     //     background(Koji.config.colors.backgroundColor);
     // }
+    if(isMobile) {
+
+    }else {
+
     if (gameOver) {
         background(Koji.config.colors.backgroundColor);
         showInstructions();
         image(imgCursor, mouseX, mouseY);
     } else {
         drawBackground();
-
-
-
 
         //  Drawing tower being dragged
         // for(let i = 0 ; i < len; i++) {
@@ -192,7 +203,7 @@ function draw() {
         image(imgCursor, mouseX, mouseY);
     
 }
-
+    }
 }
 
 
@@ -269,11 +280,11 @@ function drawBackground() {
             let x = i * width / cols;
             let y = j * height / rows;
             if (i === 9) {
-                fill(255);
-                rect(x, y, width / cols, height / rows);
+                // fill(255);
+                // rect(x, y, width / cols, height / rows);
                 //towers[0].show(x + 20, y + 25, width / cols, height / rows);
-                towerButton.update();
-                towerButton.btn.draw();
+                towerButtons[j].update(x,y);
+                towerButtons[j].btn.draw();
             }
             else {
                 if (i % 2 === 0) {

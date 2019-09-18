@@ -1,4 +1,3 @@
-
 class Enemy {
     constructor({health = 5, position = {x: -10, y: -200}, img = null} = {}) {
         this.health = health;

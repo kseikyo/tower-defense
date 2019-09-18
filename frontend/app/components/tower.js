@@ -1,4 +1,3 @@
-
 class Tower {
     constructor({damage = 2, position = {x: 0, y: 0}, img = null} = {}) {
         this.damage   = damage;
@@ -23,15 +22,15 @@ class Tower {
      * @params h is the height of the ellipse
      */
     show(posX, posY, w, h) {
-        if(false) {
-            
-        }else {
+        if(true) {
             stroke(0);
             noFill();
             strokeWeight(4);
             ellipse(posX, posY, w*2, h*2);
             fill(55);
             ellipse(posX, posY, w, h);
+        }else {
+
         }
     }
 }

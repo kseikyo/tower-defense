@@ -160,16 +160,27 @@ class TowerButton extends PlayButton{
         super();
         this.size = createVector(width/10, height/10);
         this.pos = createVector(pos * width / 10 , 9 * height / rows + objSize * 2);
+        this.btn.text = Koji.config.strings.towerButtonText;
+        if (this.size.y > width) {
+            this.size.y = width;
+        }
+        this.btn.onRelease = () => {
+            if(player.Money >= 2) {
+                towers.push(new Tower({position: {x: mouseX, y: mouseY}}));
+                player.Money -= 2;
+            }
+        }
     }
-    update() {
+    update(x, y) {
 
         //Resize button to fit text
-        this.btn.textSize = floor(objSize * 0.9);
         this.size = createVector(this.btn.textWidth * 1.5, this.btn.textSize * 3);
 
         if (this.size.y > width) {
             this.size.y = width;
         }
+        this.pos.x = x;
+        this.pos.y = y;
         this.btn.resize(this.size.x, this.size.y);
         this.btn.locate(this.pos.x, this.pos.y);
     }

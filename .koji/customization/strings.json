@@ -8,6 +8,7 @@
     "gameOverText": "GAME OVER",
     "highScoreText": "High Score:",
     "playButtonText": "PLAY NOW",
+    "towerButtonText": "Create tower",
     "roundButtonText": "Launch wave",
     "scoreText": "Score:",
     "highscoreText": "High Score:",
@@ -47,6 +48,12 @@
           "key": "instructions3",
           "name": "Instructions 3",
           "description": "The third line of description.",
+          "type":"text"
+        },
+        {
+          "key": "towerButtonText",
+          "name": "Tower button text",
+          "description": "The text on the button that creates a tower",
           "type":"text"
         }, 
         {
